@@ -1,5 +1,5 @@
 ---
-- name: Install and start Apache
+- name: Install Webserver
   hosts: all
   become: true
   tasks:
@@ -7,8 +7,60 @@
       ansible.builtin.package:
         name: httpd
         state: present
+            
+    - name: Install php and git
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      with_items:
+       - php
+       - php-mysqlnd
+       - php-cli
+       - git
+    
+    - name: Configure firewall for access
+      firewalld:
+        permanent: yes
+        service: http
+        state: enabled
+        immediate: yes
+    
+    - name: Create Facts Dir on Managed Hosts
+      file:
+        path: "{{ facts_dir }}"
+        state: directory
+        recurse: yes
+    
+    - name: Write the webserver configuration version out as a custom fact
+      ini_file:
+        path: "{{ facts_dir }}/webserver.fact"
+        section: general
+        option: version
+        value: 1
+      when: mode == "deploy"
+    
+    - name: Update webserver configuration version custom fact
+      ini_file:
+        path: "{{ facts_dir }}/webserver.fact"
+        section: general
+        option: version
+        value: "{{ ansible_facts['ansible_local']['webserver']['general']['version'] | int + 1 }}"
+      when: mode == "update"
+    
+    - name: show version
+      debug:
+        msg: "{{ ansible_facts['ansible_local']['webserver']['general']['version'] | int + 1 }}"
+      when: mode == "update"
+    
+    - name: Write the webserver serial out as a custom fact
+      ini_file:
+        path: "{{ facts_dir }}/webserver.fact"
+        section: general
+        option: serial
+        value: "{{ lookup('ansible.utils.index_of', ansible_play_hosts, 'eq', inventory_hostname) }}"
+    
     - name: Start the httpd service if needed
-      ansible.builtin.service:
-        name: httpd
-        state: started
-        enabled: true
+          ansible.builtin.service:
+            name: httpd
+            state: started
+            enabled: true
