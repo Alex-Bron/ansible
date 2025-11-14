@@ -1,11 +1,11 @@
 - name: HCP
   hosts: all
   tasks:
-  - name: Create a plan-only run for review (with polling)
+  - name: Execute a terraform plan
     hashicorp.terraform.run:
       organization: "TechXchangeNL"
       workspace: "{{ workspace }}"
       run_message: "Review infrastructure changes"
-      plan_only: true
+      # plan_only: true
       poll: true
       state: "present"
