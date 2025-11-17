@@ -4,6 +4,7 @@
   become: true
   vars:
     facts_dir: "/etc/ansible/facts.d"
+    ansible_python_interpreter: /usr/bin/python3
     
   tasks:
     - name: Ensure the httpd package is installed
@@ -21,12 +22,12 @@
        - php-cli
        - git
     
-    #- name: Configure firewall for access
-    #  ansible.posix.firewalld:
-    #    permanent: yes
-    #    service: http
-    #    state: enabled
-    #    immediate: yes
+    - name: Configure firewall for access
+      ansible.posix.firewalld:
+        permanent: yes
+        service: http
+        state: enabled
+        immediate: yes
     
     - name: Create Facts Dir on Managed Hosts
       ansible.builtin.file:
