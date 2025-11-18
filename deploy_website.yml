@@ -8,6 +8,11 @@
     git_base: https://github.com/TechXchangeNL
 
   tasks:
+  - name: Git checkout
+    ansible.builtin.git:
+      repo: 'https://github.com/ansible/ansible.git'
+      dest: /tmp/checkout
+      version: release-0.22
   - name: Copy the code from repository
     ansible.builtin.git:
       repo: 'https://github.com/TechXchangeNL/website.git'
