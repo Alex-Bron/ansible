@@ -86,8 +86,8 @@ keyed_groups:
 Also, you need the `Terraform Backend Configuration` Credential you made before as the credential for this source. You can test it by syncing the source manually.
 Do **NOT** enable _update on launch_.
 
-### Job Templates
-Now that you have the basics set up (project, credentials, inventory), you can define job templates in AAP. As you can see in the repository where this README lives, there are 3 playbooks:
+### Playbooks
+As you can see in the repository where this README lives, there are 3 playbooks:
 - apply_plan.yml This playbook will run and apply a plan in HCP.
 - deploy_webserver.yml. This playbook will deploy a webserver (apache)
 - deploy_website.yml. This playbook will deploy a website
@@ -97,17 +97,20 @@ Have a look at the playbooks in this repo to get a sense of what they do. You mi
 > [!TIP]
 > If you have timing issues we found that you need to enable polling with an interval of 5 and a timeout of 1200. Also make tf_timeout something like 6000.
 
+
+### Job Templates
+Now that you have the basics set up (project, credentials, inventory, playbooks), you can define job templates in AAP. 
 Create a Job Template for each of these playbooks.
-For the deploy_servers playbook:
-- Use the provided "local" inventory. For all others the "TechXchangeNL" inventory.
-- Use the "Hashicorp Terraform Cloud" credential you made.
-- Add an extra var "workspace" with as the value the name of your workspace
+
+For the apply_plan playbook:
+- Use the provided `local` inventory.
+- Use the `Hashicorp Terraform Cloud` credential you made.
 
 For the other playbooks:
-- Use the TechXchangeNL inventory
-- Use the TechXchangeNL machine credential
+- Use the `TechXchangeNL` inventory
+- Use the `TechXchangeNL` machine credential
 
-### Workflows
+### Workflow Job Templates
 Having job templates (automation building blocks) we create two workflows:
 1. A workflow (name suggestion: "Deploy Web App") that runs the following playbooks in that order:
    1. sync inventory source Terraform
