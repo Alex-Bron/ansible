@@ -8,3 +8,6 @@
     run_message: "Deploy new application version"
     auto_apply: true
     state: "present"
+    poll_timeout: 1200
+    poll_interval: 5
+    tf_timeout: 6000
