@@ -2,4 +2,9 @@
   hosts: all
   tasks:
   - name: Apply a terraform plan
-
+    hashicorp.terraform.run:
+    workspace: "terraform-alex-bron"
+    organization: "TechXchangeNL"
+    run_message: "Deploy new application version"
+    auto_apply: true
+    state: "present"
